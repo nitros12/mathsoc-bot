@@ -1,0 +1,10 @@
+.git/
+
+.dockerignore
+docker-compose.yml
+Dockerfile
+.env
+.env.example
+.envrc
+
+__pycache__/

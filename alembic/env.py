@@ -9,10 +9,11 @@ from logging.config import fileConfig
 
 from dotenv import load_dotenv
 from sqlalchemy import engine_from_config, pool
+from sqlalchemy_utils import database_exists, create_database
 
 from alembic import context
-from luhack_bot.db.models import db as target_metadata
-from luhack_bot.db.models import *
+from mathsoc_bot.db.models import db as target_metadata
+from mathsoc_bot.db.models import *
 
 load_dotenv()
 
@@ -63,6 +64,9 @@ def run_migrations_online():
     connectable = engine_from_config(
         alembic_config, prefix="sqlalchemy.", poolclass=pool.NullPool
     )
+
+    if not database_exists(connectable.url):
+        create_database(connectable.url)
 
     with connectable.connect() as connection:
         context.configure(connection=connection, target_metadata=target_metadata)
