@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 
 from mathsoc_bot.constants import mathsoc_guild_id
-from mathsoc_bot.db.models import User
 
 
 def in_channel(channel_id: int):
@@ -39,19 +38,6 @@ def is_admin(ctx: commands.Context) -> bool:
     if not is_admin:
         raise commands.CheckFailure(
             "You must be an admin to use this command."
-        )
-
-    return True
-
-
-async def is_authed(ctx: commands.Context) -> bool:
-    """Ensure a member is registered with Mathsoc."""
-
-    user = await User.get(ctx.author.id)
-
-    if user is None:
-        raise commands.CheckFailure(
-            "It looks like you're not registed with mathsoc, go and register yourself."
         )
 
     return True

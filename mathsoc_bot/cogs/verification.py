@@ -5,7 +5,6 @@ from discord.ext import commands
 
 from mathsoc_bot import email_tools
 from mathsoc_bot import token_tools
-from mathsoc_bot.db.models import User
 from mathsoc_bot.utils.checks import is_admin
 from mathsoc_bot.utils.checks import is_in_mathsoc
 
@@ -23,19 +22,6 @@ class Verification(commands.Cog):
     def bot_check_once(self, ctx):
         return is_in_mathsoc(ctx)
 
-    @commands.Cog.listener()
-    async def on_member_remove(self, member):
-        (status, _) = await User.delete.where(User.discord_id == member.id).gino.status()
-        if status != "DELETE 0":
-            await self.bot.log_message(f"Member left, removing their verification: {member} ({member.id})")
-
-
-    @commands.Cog.listener()
-    async def on_member_join(self, member):
-        (status, _) = await User.delete.where(User.discord_id == member.id).gino.status()
-        if status != "DELETE 0":
-            await self.bot.log_message(f"Member rejoined, removing their verification: {member} ({member.id})")
-
     @commands.command(name="token")
     async def generate_token(self, ctx, email: email_tools.lancs_email):
         """Generates an authentication token, then emails it to the provided email. You
@@ -43,11 +29,6 @@ class Verification(commands.Cog):
         authentication token.
 
         """
-        existing_user = await User.query.where((User.discord_id == ctx.author.id) | (User.email == email)).gino.first()
-
-        if existing_user is not None:
-            raise commands.CheckFailure("It seems you've already registered.")
-
         auth_token = token_tools.generate_auth_token(ctx.author.id, email)
 
         logger.info("Generated token for user: %s, %s", ctx.author, auth_token)
@@ -61,11 +42,6 @@ class Verification(commands.Cog):
         """Takes an authentication token and verifies you.
         Note that tokens expire after 30 minutes.
         """
-        existing_user = await User.get(ctx.author.id)
-
-        if existing_user is not None:
-            raise commands.CheckFailure("It seems you've already registered.")
-
         user = token_tools.decode_auth_token(auth_token)
 
         if user is None:
@@ -88,37 +64,5 @@ class Verification(commands.Cog):
 
         await member.add_roles(self.bot.verified_role())
 
-        user = User(discord_id=user_id, email=user_email)
-        await user.create()
-
         await ctx.send("Permissions granted, you are now verified!")
-        await self.bot.log_message(f"verified member {member} ({member.id})")
-
-    @commands.check(is_admin)
-    @commands.command()
-    async def add_user_manually(self, ctx, member: discord.Member, email: str):
-        """Manually auth a member."""
-        logger.info("Verifying member: %s", member)
-
-        user = User(discord_id=member.id, email=email)
-        await user.create()
-
-        await member.add_roles(self.bot.verified_role())
-
-        await member.send("Permissions granted, you are now verified!")
-        await ctx.send(f"Manually verified {member}")
-        await self.bot.log_message(f"verified member {member} ({member.id})")
-
-    @commands.check(is_admin)
-    @commands.command()
-    async def user_info(self, ctx, member: discord.Member):
-        """Get info for a user."""
-        user = await User.get(member.id)
-
-        if user is None:
-            await ctx.send("No info for that user ;_;")
-            return
-
-        await ctx.send(
-            f"User: {member} ({user.discord_id}) <{user.email}>. Verified at: {user.verified_at}"
-        )
+        await self.bot.log_message(f"verified member {member} ({member.id}) (email: {user_email})")

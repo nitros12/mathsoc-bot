@@ -8,15 +8,8 @@ authors = ["Ben Simms <ben@bensimms.moe>"]
 python = "^3.8"
 itsdangerous = "^1.1"
 cryptography = "^3.0"
-gino = "^1.0"
 python-dotenv = "^0.14"
-sqlalchemy_utils = "^0.36"
-asyncpg = "^0.20"
-alembic = "^1.4"
-python-dateutil = "^2.8"
-parsedatetime = "^2.6"
 "discord.py" = "^1.4"
-psycopg2-binary = "^2.8.5"
 
 [tool.poetry.scripts]
 start_bot = 'mathsoc_bot:run'

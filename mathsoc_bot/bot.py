@@ -8,7 +8,6 @@ from discord.ext import commands
 from mathsoc_bot import constants
 from mathsoc_bot.cogs import admin
 from mathsoc_bot.cogs import verification
-from mathsoc_bot.db.helpers import init_db
 from mathsoc_bot.secrets import bot_client_token
 
 logger = logging.getLogger(__name__)
@@ -92,8 +91,5 @@ class MathsocBot(commands.Bot):
 
 
 def start():
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(init_db())
-
     bot = MathsocBot()
     bot.run(bot_client_token)
