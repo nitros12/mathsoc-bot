@@ -25,7 +25,16 @@ class Verification(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
-        await User.delete.where(User.discord_id == member.id)
+        (status, _) = await User.delete.where(User.discord_id == member.id).gino.status()
+        if status != "DELETE 0":
+            await self.bot.log_message(f"Member left, removing their verification: {member} ({member.id})")
+
+
+    @commands.Cog.listener()
+    async def on_member_join(self, member):
+        (status, _) = await User.delete.where(User.discord_id == member.id).gino.status()
+        if status != "DELETE 0":
+            await self.bot.log_message(f"Member rejoined, removing their verification: {member} ({member.id})")
 
     @commands.command(name="token")
     async def generate_token(self, ctx, email: email_tools.lancs_email):
