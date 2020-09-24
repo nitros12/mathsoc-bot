@@ -1,8 +1,11 @@
 import random
 import ast
 import textwrap
+import itertools
+from typing import List
 
 import discord
+from discord import guild
 from discord.ext import commands
 
 from mathsoc_bot.utils.checks import is_admin
@@ -22,6 +25,13 @@ def insert_returns(body):
     if isinstance(body[-1], ast.With):
         insert_returns(body[-1].body)
 
+def chunk(it, n):
+    it = iter(it)
+    while True:
+        r = list(itertools.islice(it, n))
+        if not r:
+            break
+        yield r
 
 class Admin(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -29,6 +39,26 @@ class Admin(commands.Cog):
 
     async def cog_check(self, ctx):
         return is_admin(ctx)
+
+    @commands.command()
+    async def mr(self, ctx, *roles: discord.Role):
+        """Mention all members that havbe all of the specified roles."""
+
+        if not roles:
+            await ctx.send("That would mention everyone")
+            return
+
+        roles_s = set(roles)
+
+        to_mention = [m for m in ctx.guild.members if roles_s.issubset(m.roles)]
+
+        pag = commands.Paginator(prefix="", suffix="")
+
+        for line_m in chunk(to_mention, 4):
+            pag.add_line(" ".join(m.mention for m in line_m))
+
+        for page in pag.pages:
+            await ctx.send(page)
 
     @commands.command(name="eval")
     async def eval_fn(self, ctx, *, cmd):
