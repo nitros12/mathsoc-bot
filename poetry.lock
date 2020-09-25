@@ -18,6 +18,18 @@ speedups = ["aiodns", "brotlipy", "cchardet"]
 
 [[package]]
 category = "main"
+description = "asyncio SMTP client"
+name = "aiosmtplib"
+optional = false
+python-versions = ">=3.5.2,<4.0.0"
+version = "1.1.4"
+
+[package.extras]
+docs = ["sphinx (>=2,<4)", "sphinx_autodoc_typehints (>=1.7.0,<2.0.0)"]
+uvloop = ["uvloop (>=0.13,<0.15)"]
+
+[[package]]
+category = "main"
 description = "Timeout context manager for asyncio programs"
 name = "async-timeout"
 optional = false
@@ -156,7 +168,7 @@ idna = ">=2.0"
 multidict = ">=4.0"
 
 [metadata]
-content-hash = "eccfbd238c83c28309bf65e29f249fbfc2ba5f3c8f1439b563e27e58922afeb0"
+content-hash = "fa4a9c41fbdadb7288af7d472d3013081cabc3b52f47509e9d303709c33cc443"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -173,6 +185,10 @@ aiohttp = [
     {file = "aiohttp-3.6.2-cp37-cp37m-win_amd64.whl", hash = "sha256:32e5f3b7e511aa850829fbe5aa32eb455e5534eaa4b1ce93231d00e2f76e5654"},
     {file = "aiohttp-3.6.2-py3-none-any.whl", hash = "sha256:460bd4237d2dbecc3b5ed57e122992f60188afe46e7319116da5eb8a9dfedba4"},
     {file = "aiohttp-3.6.2.tar.gz", hash = "sha256:259ab809ff0727d0e834ac5e8a283dc5e3e0ecc30c4d80b3cd17a4139ce1f326"},
+]
+aiosmtplib = [
+    {file = "aiosmtplib-1.1.4-py3-none-any.whl", hash = "sha256:93e53edac183f1a608bc34464efeef23902e59e949017b1682014f59ecdcd37d"},
+    {file = "aiosmtplib-1.1.4.tar.gz", hash = "sha256:8270d0a06475aa05b9276fc954fbd08a1f6c59d0452b4899413d8bca1db24541"},
 ]
 async-timeout = [
     {file = "async-timeout-3.0.1.tar.gz", hash = "sha256:0c3c816a028d47f659d6ff5c745cb2acf1f966da1fe5c19c77a70282b25f4c5f"},
