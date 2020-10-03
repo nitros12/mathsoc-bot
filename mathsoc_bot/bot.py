@@ -15,6 +15,8 @@ logger = logging.getLogger(__name__)
 
 class MathsocBot(commands.Bot):
     def __init__(self, **kwargs):
+        intents = discord.Intents.default()
+        intents.members = True
         base_kwargs = {"command_prefix": ["m!"], "pm_help": True}
         base_kwargs.update(kwargs)
         super().__init__(**base_kwargs)
