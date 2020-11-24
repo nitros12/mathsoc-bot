@@ -5,7 +5,6 @@ from discord.ext import commands
 
 from mathsoc_bot import email_tools
 from mathsoc_bot import token_tools
-from mathsoc_bot.utils.checks import is_admin
 from mathsoc_bot.utils.checks import is_in_mathsoc
 
 logger = logging.getLogger(__name__)

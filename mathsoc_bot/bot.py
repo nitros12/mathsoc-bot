@@ -8,6 +8,7 @@ from discord.ext import commands
 from mathsoc_bot import constants
 from mathsoc_bot.cogs import admin
 from mathsoc_bot.cogs import verification
+from mathsoc_bot.cogs import confessions
 from mathsoc_bot.secrets import bot_client_token
 
 logger = logging.getLogger(__name__)
@@ -40,12 +41,16 @@ class MathsocBot(commands.Bot):
         await self.wait_until_ready()
         self.add_cog(verification.Verification(self))
         self.add_cog(admin.Admin(self))
+        self.add_cog(confessions.Confessions(self))
 
     def mathsoc_guild(self):
         return self.get_guild(constants.mathsoc_guild_id)
 
     def verified_role(self):
         return self.mathsoc_guild().get_role(constants.verified_role_id)
+
+    def confession_channel(self):
+        return self.mathsoc_guild().get_channel(constants.confession_channel_id)
 
     async def log_message(self, *args, **kwargs):
         mathsoc_guild = self.mathsoc_guild()
